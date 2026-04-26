@@ -8,8 +8,8 @@ header("Content-Type: application/json");
 // Autoloader de Composer para la librería de MongoDB
 require __DIR__ . '/../vendor/autoload.php';
 
-// Obtener la URI desde las variables de entorno de Vercel (o tu entorno local)
-$mongoUri = getenv('MONGODB_URI');
+// Reemplaza <db_password> con la contraseña real de tu base de datos
+$mongoUri = "mongodb+srv://root123:root123@cluster0.0s6q0vr.mongodb.net/?appName=Cluster0";
 
 if (!$mongoUri) {
     http_response_code(500);
@@ -31,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         try {
             // Conectar a MongoDB Atlas
             $client = new MongoDB\Client($mongoUri);
-            
+
             // Seleccionar la base de datos y colección
             // Reemplaza 'mi_base_de_datos' con el nombre de tu base de datos en Atlas
             $collection = $client->mi_base_de_datos->usuarios;
