@@ -1,0 +1,7 @@
+{
+    "name": "usuario/php-formulario-mongodb",
+    "description": "Formulario PHP que guarda en MongoDB Atlas en Vercel",
+    "require": {
+        "mongodb/mongodb": "^1.15"
+    }
+}
