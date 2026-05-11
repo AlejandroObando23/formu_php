@@ -19,37 +19,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $json = file_get_contents('php://input');
     $data = json_decode($json, true);
 
-    if (isset($data['nombre']) && isset($data['edad'])) {
-        $nombre = $data['nombre'];
-        $edad = $data['edad'];
-        $type = $data['type'] ?? 'user';
-
-        // Validar que instrument esté presente y no vacío
-        if (!isset($data['instrument']) || empty($data['instrument'])) {
-            http_response_code(400);
-            echo json_encode(['error' => 'Debe especificar un instrumento.']);
-            exit;
-        }
-        $instrument = $data['instrument'];
-        // Si instrument es array, convertirlo a string
-        if (is_array($instrument)) {
-            $instrument = implode(', ', $instrument);
-        }
+    // Validar requeridos básicos
+    if (isset($data['name']) && isset($data['stage_name']) && isset($data['genre']) && isset($data['debut_year'])) {
+        $name = $data['name'];
+        $stage_name = $data['stage_name'];
+        $genre = $data['genre'];
+        $debut_year = $data['debut_year'];
+        $albums = $data['albums'] ?? 0;
+        $listeners = $data['listeners'] ?? 0;
+        $awards = $data['awards'] ?? 0;
+        $country = $data['country'] ?? '';
 
         try {
             $client = new MongoDB\Client($mongoUri);
-            $collection = $client->mi_base_de_datos->usuarios;
+            // Usamos la colección 'cantantes'
+            $collection = $client->mi_base_de_datos->cantantes;
 
             $insertOneResult = $collection->insertOne([
-                'nombre' => $nombre,
-                'edad' => $edad,
-                'instrument' => $instrument,
-                'type' => $type,
+                'name' => $name,
+                'stage_name' => $stage_name,
+                'genre' => $genre,
+                'debut_year' => $debut_year,
+                'albums' => $albums,
+                'listeners' => $listeners,
+                'awards' => $awards,
+                'country' => $country,
                 'fecha_registro' => new MongoDB\BSON\UTCDateTime()
             ]);
 
             if ($insertOneResult->getInsertedCount() == 1) {
-                echo json_encode(['message' => '¡Registro exitoso en MongoDB Atlas a través de PHP!']);
+                echo json_encode(['message' => '¡Estrella registrada exitosamente en la galaxia musical!']);
             } else {
                 http_response_code(500);
                 echo json_encode(['error' => 'Error al guardar el registro en la base de datos.']);
@@ -60,7 +59,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     } else {
         http_response_code(400);
-        echo json_encode(['error' => 'Faltan datos requeridos (nombre, edad).']);
+        echo json_encode(['error' => 'Faltan datos requeridos (nombre, nombre artístico, etc).']);
     }
 } else {
     http_response_code(405);

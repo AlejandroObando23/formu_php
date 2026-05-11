@@ -3,48 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
-    <title>Listado de Cantantes</title>
+    <title>Stellar Singers | Salón de la Fama</title>
 </head>
-<body>
-    <h2>Listado de Cantantes</h2>
-    <table id="tablaUsuarios" border="1">
-        <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>Edad</th>
-                <th>Tipo Canción</th>
-                <th>Instrumento</th>
-                <th>Fecha Registro</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
-    <a href="index.html">Volver al registro</a>
+<body class="list-body">
+    <div class="background-animation"></div>
+    
+    <div class="container-wide">
+        <div class="header-action">
+            <a href="index.html" class="nav-link back-link">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Nuevo Registro</span>
+            </a>
+            <h1>Salón de la Fama</h1>
+            <div class="spacer"></div>
+        </div>
+
+        <div class="table-container">
+            <table id="tablaUsuarios">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Artístico</th>
+                        <th>Género</th>
+                        <th>País</th>
+                        <th>Álbumes</th>
+                        <th>Oyentes (M)</th>
+                        <th>Premios</th>
+                        <th>Debut</th>
+                        <th>Años Actividad</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td colspan="9" class="loading-cell">Cargando estrellas...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
     <script>
     async function cargarUsuarios() {
         const tabla = document.getElementById('tablaUsuarios').querySelector('tbody');
-        tabla.innerHTML = '<tr><td colspan="5">Cargando...</td></tr>';
         try {
             const res = await fetch('/api/listar.php');
             const usuarios = await res.json();
             tabla.innerHTML = '';
+            
             if (usuarios.length === 0) {
-                tabla.innerHTML = '<tr><td colspan="5">Sin registros</td></tr>';
+                tabla.innerHTML = '<tr><td colspan="9" class="empty-cell">El universo está vacío. Registra al primer artista.</td></tr>';
             } else {
+                const currentYear = new Date().getFullYear();
+                
                 usuarios.forEach(u => {
+                    // Computed value: Años de Actividad
+                    let yearsActive = "Desconocido";
+                    if (u.debut_year) {
+                        yearsActive = currentYear - parseInt(u.debut_year);
+                        if (yearsActive < 0) yearsActive = 0;
+                    }
+
+                    // Format listeners for readability (e.g. 10.5M)
+                    let formattedListeners = u.listeners ? (parseInt(u.listeners) / 1000000).toFixed(1) + 'M' : 'N/A';
+
                     tabla.innerHTML += `<tr>
-                        <td>${u.nombre}</td>
-                        <td>${u.edad}</td>
-                        <td>${u.type}</td>
-                        <td>${u.instrument}</td>
-                        <td>${u.fecha_registro}</td>
+                        <td><div class="td-content main-text">${u.name || '-'}</div></td>
+                        <td><div class="td-content highlight-text">${u.stage_name || '-'}</div></td>
+                        <td><div class="td-content badge">${u.genre || '-'}</div></td>
+                        <td><div class="td-content">${u.country || '-'}</div></td>
+                        <td><div class="td-content number-cell">${u.albums || '0'}</div></td>
+                        <td><div class="td-content number-cell">${formattedListeners}</div></td>
+                        <td><div class="td-content badge gold">⭐ ${u.awards || '0'}</div></td>
+                        <td><div class="td-content">${u.debut_year || '-'}</div></td>
+                        <td><div class="td-content computed-cell">${yearsActive} años</div></td>
                     </tr>`;
                 });
             }
         } catch {
-            tabla.innerHTML = '<tr><td colspan="5">Error al cargar datos</td></tr>';
+            tabla.innerHTML = '<tr><td colspan="9" class="error-cell">Error de conexión galáctica. No se pudieron cargar los datos.</td></tr>';
         }
     }
     window.onload = cargarUsuarios;
