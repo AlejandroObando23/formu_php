@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,14 +8,16 @@
     <link rel="stylesheet" href="css/style.css">
     <title>Stellar Singers | Salón de la Fama</title>
 </head>
+
 <body class="list-body">
     <div class="background-animation"></div>
-    
+
     <div class="container-wide">
         <div class="header-action">
             <a href="index.html" class="nav-link back-link">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
                 <span>Nuevo Registro</span>
             </a>
@@ -38,54 +41,57 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr><td colspan="9" class="loading-cell">Cargando estrellas...</td></tr>
+                    <tr>
+                        <td colspan="9" class="loading-cell">Cargando estrellas...</td>
+                    </tr>
                 </tbody>
             </table>
         </div>
     </div>
 
     <script>
-    async function cargarUsuarios() {
-        const tabla = document.getElementById('tablaUsuarios').querySelector('tbody');
-        try {
-            const res = await fetch('/api/listar.php');
-            const usuarios = await res.json();
-            tabla.innerHTML = '';
-            
-            if (usuarios.length === 0) {
-                tabla.innerHTML = '<tr><td colspan="9" class="empty-cell">El universo está vacío. Registra al primer artista.</td></tr>';
-            } else {
-                const currentYear = new Date().getFullYear();
-                
-                usuarios.forEach(u => {
-                    // Computed value: Años de Actividad
-                    let yearsActive = "Desconocido";
-                    if (u.debut_year) {
-                        yearsActive = currentYear - parseInt(u.debut_year);
-                        if (yearsActive < 0) yearsActive = 0;
-                    }
+        async function cargarUsuarios() {
+            const tabla = document.getElementById('tablaUsuarios').querySelector('tbody');
+            try {
+                const res = await fetch('/api/listar.php');
+                const usuarios = await res.json();
+                tabla.innerHTML = '';
 
-                    // Format listeners for readability (e.g. 10.5M)
-                    let formattedListeners = u.listeners ? (parseInt(u.listeners) / 1000000).toFixed(1) + 'M' : 'N/A';
+                if (usuarios.length === 0) {
+                    tabla.innerHTML = '<tr><td colspan="9" class="empty-cell">El universo está vacío. Registra al primer artista.</td></tr>';
+                } else {
+                    const currentYear = new Date().getFullYear();
 
-                    tabla.innerHTML += `<tr>
+                    usuarios.forEach(u => {
+                        // Computed value: Años de Actividad
+                        let yearsActive = "Desconocido";
+                        if (u.debut_year) {
+                            yearsActive = currentYear - parseInt(u.debut_year);
+                            if (yearsActive < 0) yearsActive = 0;
+                        }
+
+                        // Format listeners for readability (e.g. 10.5M)
+                        let formattedListeners = u.listeners ? (parseInt(u.listeners) / 1000000).toFixed(1) + 'M' : 'N/A';
+
+                        tabla.innerHTML += `<tr>
                         <td><div class="td-content main-text">${u.name || '-'}</div></td>
                         <td><div class="td-content highlight-text">${u.stage_name || '-'}</div></td>
                         <td><div class="td-content badge">${u.genre || '-'}</div></td>
                         <td><div class="td-content">${u.country || '-'}</div></td>
                         <td><div class="td-content number-cell">${u.albums || '0'}</div></td>
                         <td><div class="td-content number-cell">${formattedListeners}</div></td>
-                        <td><div class="td-content badge gold">⭐ ${u.awards || '0'}</div></td>
+                        <td><div class="td-content number-cell">${u.awards || '0'}</div></td>
                         <td><div class="td-content">${u.debut_year || '-'}</div></td>
                         <td><div class="td-content computed-cell">${yearsActive} años</div></td>
                     </tr>`;
-                });
+                    });
+                }
+            } catch {
+                tabla.innerHTML = '<tr><td colspan="9" class="error-cell">Error de conexión galáctica. No se pudieron cargar los datos.</td></tr>';
             }
-        } catch {
-            tabla.innerHTML = '<tr><td colspan="9" class="error-cell">Error de conexión galáctica. No se pudieron cargar los datos.</td></tr>';
         }
-    }
-    window.onload = cargarUsuarios;
+        window.onload = cargarUsuarios;
     </script>
 </body>
+
 </html>

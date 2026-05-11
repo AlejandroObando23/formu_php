@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,121 +8,124 @@
     <link rel="stylesheet" href="css/style.css">
     <title>Stellar Singers | Registro</title>
 </head>
+
 <body>
     <div class="background-animation"></div>
     <div class="glass-container">
         <h1>Stellar Singers</h1>
         <p class="subtitle">Registra un nuevo talento musical</p>
-        
+
         <form id="registroForm" class="campo_formulario">
             <div class="form-grid">
                 <div class="input-group">
                     <label for="name">Nombre Completo</label>
-                    <input type="text" id="name" name="name" placeholder="Ej. Abel Makkonen Tesfaye" required>
+                    <input type="text" id="name" name="name" required>
                 </div>
-                
+
                 <div class="input-group">
                     <label for="stage_name">Nombre Artístico</label>
-                    <input type="text" id="stage_name" name="stage_name" placeholder="Ej. The Weeknd" required>
+                    <input type="text" id="stage_name" name="stage_name" required>
                 </div>
 
                 <div class="input-group">
                     <label for="genre">Género Musical</label>
-                    <input type="text" id="genre" name="genre" placeholder="Ej. R&B, Pop" required>
+                    <input type="text" id="genre" name="genre" required>
                 </div>
 
                 <div class="input-group">
                     <label for="debut_year">Año de Debut</label>
-                    <input type="number" id="debut_year" name="debut_year" placeholder="Ej. 2010" min="1900" max="2026" required>
+                    <input type="number" id="debut_year" name="debut_year" min="1900" max="2026" required>
                 </div>
 
                 <div class="input-group">
                     <label for="albums">Álbumes Lanzados</label>
-                    <input type="number" id="albums" name="albums" placeholder="Ej. 5" min="0" required>
+                    <input type="number" id="albums" name="albums" min="0" required>
                 </div>
 
                 <div class="input-group">
                     <label for="listeners">Oyentes Mensuales</label>
-                    <input type="number" id="listeners" name="listeners" placeholder="Ej. 105000000" min="0" required>
+                    <input type="number" id="listeners" name="listeners" min="0" required>
                 </div>
 
                 <div class="input-group">
                     <label for="awards">Premios Ganados</label>
-                    <input type="number" id="awards" name="awards" placeholder="Ej. 15" min="0" required>
+                    <input type="number" id="awards" name="awards" min="0" required>
                 </div>
 
                 <div class="input-group">
                     <label for="country">País de Origen</label>
-                    <input type="text" id="country" name="country" placeholder="Ej. Canadá" required>
+                    <input type="text" id="country" name="country" required>
                 </div>
             </div>
 
             <button type="submit" class="glow-on-hover">Registrar Artista</button>
             <div id="mensaje" class="mensaje-box hidden"></div>
         </form>
-        
+
         <div class="links-container">
             <a href="listado.html" class="nav-link">
                 <span>Ver Salón de la Fama</span>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
             </a>
         </div>
     </div>
 
     <script>
-    document.getElementById('registroForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
-        
-        const formData = {
-            name: document.getElementById('name').value,
-            stage_name: document.getElementById('stage_name').value,
-            genre: document.getElementById('genre').value,
-            debut_year: document.getElementById('debut_year').value,
-            albums: document.getElementById('albums').value,
-            listeners: document.getElementById('listeners').value,
-            awards: document.getElementById('awards').value,
-            country: document.getElementById('country').value
-        };
+        document.getElementById('registroForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
 
-        const mensajeDiv = document.getElementById('mensaje');
-        const submitBtn = document.querySelector('button[type="submit"]');
-        
-        mensajeDiv.className = 'mensaje-box info';
-        mensajeDiv.innerText = 'Transmitting data to the stars...';
-        submitBtn.disabled = true;
-        submitBtn.innerText = 'Registrando...';
+            const formData = {
+                name: document.getElementById('name').value,
+                stage_name: document.getElementById('stage_name').value,
+                genre: document.getElementById('genre').value,
+                debut_year: document.getElementById('debut_year').value,
+                albums: document.getElementById('albums').value,
+                listeners: document.getElementById('listeners').value,
+                awards: document.getElementById('awards').value,
+                country: document.getElementById('country').value
+            };
 
-        try {
-            const response = await fetch('/api/guardar.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
-            });
-            const data = await response.json();
-            
-            if (response.ok) {
-                mensajeDiv.className = 'mensaje-box success';
-                mensajeDiv.innerText = data.message || 'Artista registrado exitosamente!';
-                document.getElementById('registroForm').reset();
-            } else {
-                mensajeDiv.className = 'mensaje-box error';
-                mensajeDiv.innerText = data.error || 'Error en el sistema';
-            }
-        } catch (error) {
-            mensajeDiv.className = 'mensaje-box error';
-            mensajeDiv.innerText = 'Fallo de conexión galáctica.';
-        } finally {
-            submitBtn.disabled = false;
-            submitBtn.innerText = 'Registrar Artista';
-            setTimeout(() => {
-                if(mensajeDiv.classList.contains('success')) {
-                    mensajeDiv.className = 'mensaje-box hidden';
+            const mensajeDiv = document.getElementById('mensaje');
+            const submitBtn = document.querySelector('button[type="submit"]');
+
+            mensajeDiv.className = 'mensaje-box info';
+            mensajeDiv.innerText = 'Transmitting data to the stars...';
+            submitBtn.disabled = true;
+            submitBtn.innerText = 'Registrando...';
+
+            try {
+                const response = await fetch('/api/guardar.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+                const data = await response.json();
+
+                if (response.ok) {
+                    mensajeDiv.className = 'mensaje-box success';
+                    mensajeDiv.innerText = data.message || 'Artista registrado exitosamente!';
+                    document.getElementById('registroForm').reset();
+                } else {
+                    mensajeDiv.className = 'mensaje-box error';
+                    mensajeDiv.innerText = data.error || 'Error en el sistema';
                 }
-            }, 4000);
-        }
-    });
+            } catch (error) {
+                mensajeDiv.className = 'mensaje-box error';
+                mensajeDiv.innerText = 'Fallo de conexión galáctica.';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerText = 'Registrar Artista';
+                setTimeout(() => {
+                    if (mensajeDiv.classList.contains('success')) {
+                        mensajeDiv.className = 'mensaje-box hidden';
+                    }
+                }, 4000);
+            }
+        });
     </script>
 </body>
+
 </html>
