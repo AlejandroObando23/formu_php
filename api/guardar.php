@@ -5,10 +5,10 @@ header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json");
 
-// Autoloader de Composer para la librería de MongoDB
+// 
 require __DIR__ . '/../vendor/autoload.php';
 
-// Obtener la URI desde las variables de entorno de Vercel (o tu entorno local)
+// 
 $mongoUri = getenv('MONGODB_URI');
 
 if (!$mongoUri) {
@@ -22,25 +22,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $json = file_get_contents('php://input');
     $data = json_decode($json, true);
 
-    if (isset($data['nombre']) && isset($data['email']) && isset($data['password'])) {
+    if (isset($data['nombre']) && isset($data['email']) ) {
         $nombre = $data['nombre'];
         $email = $data['email'];
-        // Hashear la contraseña por seguridad
-        $password = password_hash($data['password'], PASSWORD_DEFAULT);
-
+        $type = $data['type'] ?? 'user'; 
+       
+     
         try {
-            // Conectar a MongoDB Atlas
+
             $client = new MongoDB\Client($mongoUri);
 
-            // Seleccionar la base de datos y colección
-            // Reemplaza 'mi_base_de_datos' con el nombre de tu base de datos en Atlas
+
             $collection = $client->mi_base_de_datos->usuarios;
 
             // Insertar el documento
             $insertOneResult = $collection->insertOne([
                 'nombre' => $nombre,
                 'email' => $email,
-                'password' => $password,
+          
+                'type' => $type,
+
                 'fecha_registro' => new MongoDB\BSON\UTCDateTime()
             ]);
 

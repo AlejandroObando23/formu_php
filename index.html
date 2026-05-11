@@ -8,47 +8,79 @@
 </head>
 <body>
     <form id="registroForm" class="campo_formulario">
-        <h1>Formulario de Registro (PHP)</h1>
-        
-        <label for="name">Nombre:</label>
+        <h1>Singer Web Application</h1>
+        <label for="name">Nombre del cantante:</label>
         <input type="text" id="name" name="name" required>
-
-        <label for="email">Correo Electrónico:</label>
+        <label for="email">Edad:</label>
         <input type="email" id="email" name="email" required>
-
-        <label for="password">Contraseña:</label>
-        <input type="password" id="password" name="password" required>
-
+        <label for="type">Tipo_Cancion:</label>
+        <input type="type" id="type" name="type" required>
+        <label for="instrument">Instrumento:</label>
+        <input type="instrument" id="instrument" name="instrument" required>
         <input type="submit" value="Registrar">
-        
         <div id="mensaje"></div>
     </form>
 
+    <h2>Listado de Cantantes</h2>
+    <table id="tablaUsuarios" border="1">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Edad</th>
+                <th>Tipo Canción</th>
+                <th>Fecha Registro</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Aquí se llenarán los datos -->
+        </tbody>
+    </table>
+
     <script>
+    async function cargarUsuarios() {
+        const tabla = document.getElementById('tablaUsuarios').querySelector('tbody');
+        tabla.innerHTML = '<tr><td colspan="4">Cargando...</td></tr>';
+        try {
+            const res = await fetch('/api/listar.php');
+            const usuarios = await res.json();
+            tabla.innerHTML = '';
+            if (usuarios.length === 0) {
+                tabla.innerHTML = '<tr><td colspan="4">Sin registros</td></tr>';
+            } else {
+                usuarios.forEach(u => {
+                    tabla.innerHTML += `<tr>
+                        <td>${u.nombre}</td>
+                        <td>${u.email}</td>
+                        <td>${u.type}</td>
+                        <td>${u.fecha_registro}</td>
+                    </tr>`;
+                });
+            }
+        } catch {
+            tabla.innerHTML = '<tr><td colspan="4">Error al cargar datos</td></tr>';
+        }
+    }
+
     document.getElementById('registroForm').addEventListener('submit', async function(e) {
         e.preventDefault();
-        
         const nombre = document.getElementById('name').value;
         const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
+        const type = document.getElementById('type').value;
         const mensajeDiv = document.getElementById('mensaje');
-
         mensajeDiv.style.color = '#333';
         mensajeDiv.innerText = 'Registrando...';
-
         try {
             const response = await fetch('/api/guardar.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ nombre, email, password })
+                body: JSON.stringify({ nombre, email, type })
             });
-            
             const data = await response.json();
-            
             if (response.ok) {
                 mensajeDiv.style.color = 'green';
                 mensajeDiv.innerText = data.message;
                 document.getElementById('registroForm').reset();
+                cargarUsuarios();
             } else {
                 mensajeDiv.style.color = 'red';
                 mensajeDiv.innerText = data.error || 'Error desconocido';
@@ -58,6 +90,8 @@
             mensajeDiv.innerText = 'Error de conexión con el servidor.';
         }
     });
+
+    window.onload = cargarUsuarios;
     </script>
 </body>
 </html>
