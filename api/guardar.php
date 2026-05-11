@@ -31,6 +31,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             exit;
         }
         $instrument = $data['instrument'];
+        // Si instrument es array, convertirlo a string
+        if (is_array($instrument)) {
+            $instrument = implode(', ', $instrument);
+        }
 
         try {
             $client = new MongoDB\Client($mongoUri);
