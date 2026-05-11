@@ -86,3 +86,40 @@ input[type="submit"]:active {
     text-align: center;
     color: #333;
 }
+
+#tablaUsuarios {
+    border-collapse: separate;
+    border-spacing: 0;
+    background: rgba(255,255,255,0.97);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+    min-width: 700px;
+    margin-bottom: 2rem;
+}
+
+#tablaUsuarios th, #tablaUsuarios td {
+    padding: 1rem 1.2rem;
+    text-align: center;
+}
+
+#tablaUsuarios th {
+    background: #764ba2;
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.1rem;
+    border-bottom: 2px solid #667eea;
+}
+
+#tablaUsuarios tr:nth-child(even) {
+    background: #f3f0fa;
+}
+
+#tablaUsuarios tr:nth-child(odd) {
+    background: #fff;
+}
+
+#tablaUsuarios tr:hover {
+    background: #e0d7f3;
+    transition: background 0.2s;
+}

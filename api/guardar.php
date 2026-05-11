@@ -1,14 +1,11 @@
 <?php
-// Habilitar CORS si es necesario (útil para pruebas locales)
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json");
 
-// 
 require __DIR__ . '/../vendor/autoload.php';
 
-// 
 $mongoUri = getenv('MONGODB_URI');
 
 if (!$mongoUri) {
@@ -18,32 +15,32 @@ if (!$mongoUri) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Leer los datos JSON que envía fetch desde el frontend
+
     $json = file_get_contents('php://input');
     $data = json_decode($json, true);
 
-    if (isset($data['nombre']) && isset($data['edad']) ) {
+    if (isset($data['nombre']) && isset($data['edad'])) {
         $nombre = $data['nombre'];
         $edad = $data['edad'];
         $type = $data['type'] ?? 'user';
-        $instrument = $data['instrument'] ?? 'unknown'; 
-       
-     
+
+        // Validar que instrument esté presente y no vacío
+        if (!isset($data['instrument']) || empty($data['instrument'])) {
+            http_response_code(400);
+            echo json_encode(['error' => 'Debe especificar un instrumento.']);
+            exit;
+        }
+        $instrument = $data['instrument'];
+
         try {
-
             $client = new MongoDB\Client($mongoUri);
-
-
             $collection = $client->mi_base_de_datos->usuarios;
 
-          
             $insertOneResult = $collection->insertOne([
                 'nombre' => $nombre,
                 'edad' => $edad,
                 'instrument' => $instrument,
-          
                 'type' => $type,
-
                 'fecha_registro' => new MongoDB\BSON\UTCDateTime()
             ]);
 
@@ -59,7 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     } else {
         http_response_code(400);
-        echo json_encode(['error' => 'Faltan datos requeridos (nombre, edad o password).']);
+        echo json_encode(['error' => 'Faltan datos requeridos (nombre, edad).']);
     }
 } else {
     http_response_code(405);
