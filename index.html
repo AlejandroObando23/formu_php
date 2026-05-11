@@ -17,60 +17,18 @@
         <input type="type" id="type" name="type" required>
         <label for="instrument">Instrumento:</label>
         <input type="instrument" id="instrument" name="instrument" required>
-
         <input type="submit" value="Registrar">
         <div id="mensaje"></div>
     </form>
-
-    <h2>Listado de Cantantes</h2>
-    <table id="tablaUsuarios" border="1">
-        <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>Edad</th>
-                <th>Tipo Canción</th>
-                <th>Fecha Registro</th>
-            </tr>
-        </thead>
-        <tbody>
-         
-        </tbody>
-    </table>
-
+    <a href="listado.html">Ver listado de cantantes</a>
     <script>
-    async function cargarUsuarios() {
-        const tabla = document.getElementById('tablaUsuarios').querySelector('tbody');
-        tabla.innerHTML = '<tr><td colspan="4">Cargando...</td></tr>';
-        try {
-            const res = await fetch('/api/listar.php');
-            const usuarios = await res.json();
-            tabla.innerHTML = '';
-            if (usuarios.length === 0) {
-                tabla.innerHTML = '<tr><td colspan="4">Sin registros</td></tr>';
-            } else {
-                usuarios.forEach(u => {
-                    tabla.innerHTML += `<tr>
-                        <td>${u.nombre}</td>
-                        <td>${u.edad}</td>
-                        <td>${u.type}</td>
-                        <td>${u.instrument}</td>
-                        <td>${u.fecha_registro}</td>
-                        
-                    </tr>`;
-                });
-            }
-        } catch {
-            tabla.innerHTML = '<tr><td colspan="4">Error al cargar datos</td></tr>';
-        }
-    }
-
     document.getElementById('registroForm').addEventListener('submit', async function(e) {
         e.preventDefault();
         const nombre = document.getElementById('name').value;
         const edad = document.getElementById('edad').value;
         const type = document.getElementById('type').value;
+        const instrument = document.getElementById('instrument').value;
         const mensajeDiv = document.getElementById('mensaje');
-         const instrument = document.getElementById('instrument');
         mensajeDiv.style.color = '#333';
         mensajeDiv.innerText = 'Registrando...';
         try {
@@ -84,7 +42,6 @@
                 mensajeDiv.style.color = 'green';
                 mensajeDiv.innerText = data.message;
                 document.getElementById('registroForm').reset();
-                cargarUsuarios();
             } else {
                 mensajeDiv.style.color = 'red';
                 mensajeDiv.innerText = data.error || 'Error desconocido';
@@ -94,8 +51,6 @@
             mensajeDiv.innerText = 'Error de conexión con el servidor.';
         }
     });
-
-    window.onload = cargarUsuarios;
     </script>
 </body>
 </html>

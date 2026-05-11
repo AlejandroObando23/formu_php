@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <title>Listado de Cantantes</title>
+</head>
+<body>
+    <h2>Listado de Cantantes</h2>
+    <table id="tablaUsuarios" border="1">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Edad</th>
+                <th>Tipo Canción</th>
+                <th>Instrumento</th>
+                <th>Fecha Registro</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <a href="index.html">Volver al registro</a>
+    <script>
+    async function cargarUsuarios() {
+        const tabla = document.getElementById('tablaUsuarios').querySelector('tbody');
+        tabla.innerHTML = '<tr><td colspan="5">Cargando...</td></tr>';
+        try {
+            const res = await fetch('/api/listar.php');
+            const usuarios = await res.json();
+            tabla.innerHTML = '';
+            if (usuarios.length === 0) {
+                tabla.innerHTML = '<tr><td colspan="5">Sin registros</td></tr>';
+            } else {
+                usuarios.forEach(u => {
+                    tabla.innerHTML += `<tr>
+                        <td>${u.nombre}</td>
+                        <td>${u.edad}</td>
+                        <td>${u.type}</td>
+                        <td>${u.instrument}</td>
+                        <td>${u.fecha_registro}</td>
+                    </tr>`;
+                });
+            }
+        } catch {
+            tabla.innerHTML = '<tr><td colspan="5">Error al cargar datos</td></tr>';
+        }
+    }
+    window.onload = cargarUsuarios;
+    </script>
+</body>
+</html>
