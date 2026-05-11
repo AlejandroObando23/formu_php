@@ -26,6 +26,7 @@ try {
             $fecha = $usuario['fecha_registro']->toDateTime()->format('Y-m-d H:i:s');
         }
         $result[] = [
+            '_id' => (string) $usuario['_id'],
             'name' => $usuario['name'] ?? '',
             'stage_name' => $usuario['stage_name'] ?? '',
             'genre' => $usuario['genre'] ?? '',

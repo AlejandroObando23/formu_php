@@ -38,11 +38,12 @@
                         <th>Premios</th>
                         <th>Debut</th>
                         <th>Años Actividad</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td colspan="9" class="loading-cell">Cargando estrellas...</td>
+                        <td colspan="10" class="loading-cell">Cargando estrellas...</td>
                     </tr>
                 </tbody>
             </table>
@@ -58,7 +59,7 @@
                 tabla.innerHTML = '';
 
                 if (usuarios.length === 0) {
-                    tabla.innerHTML = '<tr><td colspan="9" class="empty-cell">El universo está vacío. Registra al primer artista.</td></tr>';
+                    tabla.innerHTML = '<tr><td colspan="10" class="empty-cell">El universo está vacío. Registra al primer artista.</td></tr>';
                 } else {
                     const currentYear = new Date().getFullYear();
 
@@ -83,13 +84,40 @@
                         <td><div class="td-content number-cell">${u.awards || '0'}</div></td>
                         <td><div class="td-content">${u.debut_year || '-'}</div></td>
                         <td><div class="td-content computed-cell">${yearsActive} años</div></td>
+                        <td>
+                            <div class="td-content">
+                                <button onclick="eliminarUsuario('${u._id}')" onmouseover="this.style.background='#ff4c4c'; this.style.color='white'" onmouseout="this.style.background='rgba(255, 76, 76, 0.1)'; this.style.color='#ff4c4c'" style="background: rgba(255, 76, 76, 0.1); border: 1px solid #ff4c4c; color: #ff4c4c; padding: 5px 10px; border-radius: 5px; cursor: pointer; transition: all 0.3s; font-family: inherit; font-size: 0.9em;">Eliminar</button>
+                            </div>
+                        </td>
                     </tr>`;
                     });
                 }
             } catch {
-                tabla.innerHTML = '<tr><td colspan="9" class="error-cell">Error de conexión galáctica. No se pudieron cargar los datos.</td></tr>';
+                tabla.innerHTML = '<tr><td colspan="10" class="error-cell">Error de conexión galáctica. No se pudieron cargar los datos.</td></tr>';
             }
         }
+
+        async function eliminarUsuario(id) {
+            if (confirm("¿Estás seguro de que deseas eliminar esta estrella de la galaxia?")) {
+                try {
+                    const response = await fetch('/api/eliminar.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ id: id })
+                    });
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        cargarUsuarios(); // Recargar la tabla
+                    } else {
+                        alert(data.error || 'Error al eliminar');
+                    }
+                } catch (error) {
+                    alert('Fallo de conexión al intentar eliminar.');
+                }
+            }
+        }
+
         window.onload = cargarUsuarios;
     </script>
 </body>
