@@ -22,10 +22,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $json = file_get_contents('php://input');
     $data = json_decode($json, true);
 
-    if (isset($data['nombre']) && isset($data['email']) ) {
+    if (isset($data['nombre']) && isset($data['edad']) ) {
         $nombre = $data['nombre'];
-        $email = $data['email'];
-        $type = $data['type'] ?? 'user'; 
+        $edad = $data['edad'];
+        $type = $data['type'] ?? 'user';
+        $instrument = $data['instrument'] ?? 'unknown'; 
        
      
         try {
@@ -38,7 +39,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           
             $insertOneResult = $collection->insertOne([
                 'nombre' => $nombre,
-                'email' => $email,
+                'edad' => $edad,
+                'instrument' => $instrument,
           
                 'type' => $type,
 
@@ -57,7 +59,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     } else {
         http_response_code(400);
-        echo json_encode(['error' => 'Faltan datos requeridos (nombre, email o password).']);
+        echo json_encode(['error' => 'Faltan datos requeridos (nombre, edad o password).']);
     }
 } else {
     http_response_code(405);

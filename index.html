@@ -11,12 +11,13 @@
         <h1>Singer Web Application</h1>
         <label for="name">Nombre del cantante:</label>
         <input type="text" id="name" name="name" required>
-        <label for="email">Edad:</label>
-        <input type="email" id="email" name="email" required>
+        <label for="edad">Edad:</label>
+        <input type="edad" id="edad" name="edad" required>
         <label for="type">Tipo_Cancion:</label>
         <input type="type" id="type" name="type" required>
         <label for="instrument">Instrumento:</label>
         <input type="instrument" id="instrument" name="instrument" required>
+
         <input type="submit" value="Registrar">
         <div id="mensaje"></div>
     </form>
@@ -32,7 +33,7 @@
             </tr>
         </thead>
         <tbody>
-            <!-- Aquí se llenarán los datos -->
+         
         </tbody>
     </table>
 
@@ -50,9 +51,11 @@
                 usuarios.forEach(u => {
                     tabla.innerHTML += `<tr>
                         <td>${u.nombre}</td>
-                        <td>${u.email}</td>
+                        <td>${u.edad}</td>
                         <td>${u.type}</td>
+                        <td>${u.instrument}</td>
                         <td>${u.fecha_registro}</td>
+                        
                     </tr>`;
                 });
             }
@@ -64,16 +67,17 @@
     document.getElementById('registroForm').addEventListener('submit', async function(e) {
         e.preventDefault();
         const nombre = document.getElementById('name').value;
-        const email = document.getElementById('email').value;
+        const edad = document.getElementById('edad').value;
         const type = document.getElementById('type').value;
         const mensajeDiv = document.getElementById('mensaje');
+         const instrument = document.getElementById('instrument');
         mensajeDiv.style.color = '#333';
         mensajeDiv.innerText = 'Registrando...';
         try {
             const response = await fetch('/api/guardar.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ nombre, email, type })
+                body: JSON.stringify({ nombre, edad, type, instrument })
             });
             const data = await response.json();
             if (response.ok) {

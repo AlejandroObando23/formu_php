@@ -1,6 +1,10 @@
 <?php
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json");
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: POST");
+header("Access-Control-Allow-Headers: Content-Type");
+header("Content-Type: application/json");
 require __DIR__ . '/../vendor/autoload.php';
 
 $mongoUri = getenv('MONGODB_URI');
@@ -18,8 +22,10 @@ try {
     foreach ($usuarios as $usuario) {
         $result[] = [
             'nombre' => $usuario['nombre'] ?? '',
-            'email' => $usuario['email'] ?? '',
+            'edad' => $usuario['edad'] ?? '',
             'type' => $usuario['type'] ?? '',
+            'instrument'=> $usuario['instrument'] ??'',
+
             'fecha_registro' => $usuario['fecha_registro'] ? $usuario['fecha_registro']->toDateTime()->format('Y-m-d H:i:s') : ''
         ];
     }
