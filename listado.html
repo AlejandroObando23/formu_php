@@ -38,12 +38,13 @@
                         <th>Premios</th>
                         <th>Debut</th>
                         <th>Años Actividad</th>
+                        <th>Premios/Año</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td colspan="10" class="loading-cell">Cargando estrellas...</td>
+                        <td colspan="11" class="loading-cell">Cargando estrellas...</td>
                     </tr>
                 </tbody>
             </table>
@@ -59,17 +60,22 @@
                 tabla.innerHTML = '';
 
                 if (usuarios.length === 0) {
-                    tabla.innerHTML = '<tr><td colspan="10" class="empty-cell">El universo está vacío. Registra al primer artista.</td></tr>';
+                    tabla.innerHTML = '<tr><td colspan="11" class="empty-cell">El universo está vacío. Registra al primer artista.</td></tr>';
                 } else {
                     const currentYear = new Date().getFullYear();
 
                     usuarios.forEach(u => {
                         // Computed value: Años de Actividad
                         let yearsActive = "Desconocido";
+                        let activeYearsNum = 1;
                         if (u.debut_year) {
                             yearsActive = currentYear - parseInt(u.debut_year);
                             if (yearsActive < 0) yearsActive = 0;
+                            activeYearsNum = Math.max(1, yearsActive);
                         }
+
+                        // Computed value: Premios por año
+                        let awardsPerYear = u.awards ? (parseInt(u.awards) / activeYearsNum).toFixed(1) : '0.0';
 
                         // Format listeners for readability (e.g. 10.5M)
                         let formattedListeners = u.listeners ? (parseInt(u.listeners) / 1000000).toFixed(1) + 'M' : 'N/A';
@@ -84,6 +90,7 @@
                         <td><div class="td-content number-cell">${u.awards || '0'}</div></td>
                         <td><div class="td-content">${u.debut_year || '-'}</div></td>
                         <td><div class="td-content computed-cell">${yearsActive} años</div></td>
+                        <td><div class="td-content computed-cell highlight-text">${awardsPerYear}</div></td>
                         <td>
                             <div class="td-content">
                                 <button onclick="eliminarUsuario('${u._id}')" onmouseover="this.style.background='#ff4c4c'; this.style.color='white'" onmouseout="this.style.background='rgba(255, 76, 76, 0.1)'; this.style.color='#ff4c4c'" style="background: rgba(255, 76, 76, 0.1); border: 1px solid #ff4c4c; color: #ff4c4c; padding: 5px 10px; border-radius: 5px; cursor: pointer; transition: all 0.3s; font-family: inherit; font-size: 0.9em;">Eliminar</button>
@@ -93,7 +100,7 @@
                     });
                 }
             } catch {
-                tabla.innerHTML = '<tr><td colspan="10" class="error-cell">Error de conexión galáctica. No se pudieron cargar los datos.</td></tr>';
+                tabla.innerHTML = '<tr><td colspan="11" class="error-cell">Error de conexión galáctica. No se pudieron cargar los datos.</td></tr>';
             }
         }
 
