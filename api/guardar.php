@@ -35,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             $collection = $client->mi_base_de_datos->usuarios;
 
-            // Insertar el documento
+          
             $insertOneResult = $collection->insertOne([
                 'nombre' => $nombre,
                 'email' => $email,
