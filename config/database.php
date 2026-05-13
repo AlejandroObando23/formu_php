@@ -13,7 +13,7 @@ $capsule->addConnection([
     'driver'   => 'mongodb',
     'dsn'      => getenv('MONGODB_URI'),
     'database' => 'mi_base_de_datos',
-]);
+], 'mongodb');
 
 $capsule->setAsGlobal();
 $capsule->bootEloquent();
