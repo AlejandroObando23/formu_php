@@ -2,6 +2,8 @@
     "name": "usuario/php-formulario-mongodb",
     "description": "Formulario PHP que guarda en MongoDB Atlas en Vercel",
     "require": {
-        "mongodb/mongodb": "^1.15"
+        "mongodb/mongodb": "^1.15",
+        "illuminate/database": "^9.0",
+        "jenssegers/mongodb": "^3.9"
     }
 }

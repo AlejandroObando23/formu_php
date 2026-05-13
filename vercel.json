@@ -2,15 +2,15 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/**/*.php",
+      "src": "api/index.php",
       "use": "vercel-php@0.7.4"
     },
     {
-      "src": "index.html",
+      "src": "views/index.html",
       "use": "@vercel/static"
     },
     {
-      "src": "listado.html",
+      "src": "views/listado.html",
       "use": "@vercel/static"
     },
     {
@@ -21,15 +21,23 @@
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "/api/$1"
+      "dest": "/api/index.php"
     },
     {
       "src": "/listado",
-      "dest": "/listado.html"
+      "dest": "/views/listado.html"
     },
     {
       "src": "/listado.html",
-      "dest": "/listado.html"
+      "dest": "/views/listado.html"
+    },
+    {
+      "src": "/",
+      "dest": "/views/index.html"
+    },
+    {
+      "src": "/index.html",
+      "dest": "/views/index.html"
     },
     {
       "src": "/(.*)",
